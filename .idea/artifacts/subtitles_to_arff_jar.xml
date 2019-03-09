@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="subtitles-to-arff:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/subtitles_to_arff_jar</output-path>
+    <root id="archive" name="subtitles-to-arff.jar">
+      <element id="module-output" name="subtitles-to-arff" />
+    </root>
+  </artifact>
+</component>
