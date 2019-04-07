@@ -10,7 +10,7 @@ public class Movie {
     private Map<String, Integer> words;
 
     public Movie(String title, String rating) {
-        this.title = title;
+        this.title = title.toLowerCase();
         this.rating = rating;
         words = new HashMap<>();
     }
