@@ -93,7 +93,7 @@ public class Utils {
                 Iterator i = br2.lines().iterator();
                 while (i.hasNext()) {
                     String movie = (String) i.next();
-                    if (movie.contains(title)) {
+                    if (movie.toLowerCase().contains(title)) {
                         rating = movie.split(",")[1];
                     }
                 }
