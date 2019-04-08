@@ -32,5 +32,6 @@ public class Main {
         Utils.readSubtitles();
         System.out.println("Gerando ARFF");
         Utils.generateArff();
+        System.out.println("ARFF gerado");
     }
 }
