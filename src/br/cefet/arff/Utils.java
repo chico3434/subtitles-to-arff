@@ -108,8 +108,13 @@ public class Utils {
                         String line = (String) it.next();
                         String[] words = line.split(" ");
                         for (String word : words){
-                            Utils.words.add(word);
-                            movie.addWord(word);
+                            if (cleanWord(word)) {
+                                word = replaceWord(word);
+                                if(!word.equals("")) {
+                                    Utils.words.add(word);
+                                    movie.addWord(word);
+                                }
+                            }
                         }
                     }
                     movies.add(movie);
@@ -122,30 +127,155 @@ public class Utils {
         }
     }
 
+    public static String replaceWord(String word) {
+        word = word.replace("\'", "");
+        word = word.replace(",", "");
+        word = word.replace("-", "");
+        word = word.replace("\"", "");
+        word = word.replace("}", "");
+        word = word.replace("{", "");
+        word = word.replace("[", "");
+        word = word.replace("]", "");
+        word = word.replace("!", "");
+        word = word.replace("?", "");
+        word = word.replace("´", "");
+        word = word.replace("`", "");
+        return word;
+    }
+
+    // Passar tudo para replaceWord depois
+    public static boolean cleanWord(String word) {
+        if (word.equals(".")) {
+            return false;
+        }
+        if (word.equals(",")) {
+            return false;
+        }
+        if (word.equals("!")) {
+            return false;
+        }
+        if (word.equals("?")) {
+            return false;
+        }
+        if (word.equals("-")) {
+            return false;
+        }
+        if (word.equals("--")) {
+            return false;
+        }
+        if (word.equals("\"")) {
+            return false;
+        }
+        if (word.equals("\'")) {
+            return false;
+        }
+        if (word.equals("...")) {
+            return false;
+        }
+        if (word.equals(":")) {
+            return false;
+        }
+        if (word.equals(" ")) {
+            return false;
+        }
+        if (word.equals("")) {
+            return false;
+        }
+        if (word.equals("#")) {
+            return false;
+        }
+        if (word.equals("$")) {
+            return false;
+        }
+        if (word.equals("%")) {
+            return false;
+        }
+        if (word.equals("&")) {
+            return false;
+        }
+        if (word.equals("(")) {
+            return false;
+        }
+        if (word.equals(")")) {
+            return false;
+        }
+        if (word.equals("*")) {
+            return false;
+        }
+        if (word.equals("+")) {
+            return false;
+        }
+        if (word.equals("/")) {
+            return false;
+        }
+        if (word.equals(";")) {
+            return false;
+        }
+        if (word.equals("=")) {
+            return false;
+        }
+        if (word.equals(">")) {
+            return false;
+        }
+        if (word.equals("[")) {
+            return false;
+        }
+        if (word.equals("]")) {
+            return false;
+        }
+        if (word.equals("{")) {
+            return false;
+        }
+        if (word.equals("}")) {
+            return false;
+        }
+        if (word.equals("|")) {
+            return false;
+        }
+        if (word.equals("~")) {
+            return false;
+        }
+        if (word.equals("¡")) {
+            return false;
+        }
+        if (word.equals("´")) {
+            return false;
+        }
+        if (word.equals("¿")) {
+            return false;
+        }
+        if (word.equals("..")) {
+            return false;
+        }
+        if (word.equals("!!")) {
+            return false;
+        }
+
+        return true;
+    }
+
     public static void generateArff() {
-        String arff = "@RELATION Movie\n\n";
-        Iterator<String> it = words.iterator();
-        while(it.hasNext()) {
-            arff += "@ATTRIBUTE " + it.next() + " NUMERIC\n";
-        }
-        arff += "@ATTRIBUTE class {Livre, Dez, Doze, Quatorze, Dezesseis, Dezoito}\n\n@DATA\n";
-        for (Movie movie: movies) {
-            it = words.iterator();
-            Map words = movie.getWords();
-            while (it.hasNext()) {
-                String p = it.next();
-                if (words.containsKey(p)) {
-                    arff += words.get(p) + ",";
-                } else {
-                    arff += "0,";
-                }
-            }
-            arff += movie.getRating() + "\n";
-        }
-        // escrever arff no arquivo
         try {
             FileWriter writer = new FileWriter(path + "/movie.arff");
-            writer.write(arff);
+            writer.append("@RELATION Movie\n\n");
+            Iterator<String> it = words.iterator();
+            while(it.hasNext()) {
+                writer.append("@ATTRIBUTE " + it.next() + " NUMERIC\n");
+            }
+            writer.append("@ATTRIBUTE class {Livre, Dez, Doze, Quatorze, Dezesseis, Dezoito}\n\n@DATA\n");
+            for (Movie movie: movies) {
+                it = words.iterator();
+                Map words = movie.getWords();
+                while (it.hasNext()) {
+                    String p = it.next();
+                    if (words.containsKey(p)) {
+                        writer.append(words.get(p) + ",");
+                    } else {
+                        writer.append("0,");
+                    }
+                }
+                writer.append(movie.getRating() + "\n");
+            }
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
