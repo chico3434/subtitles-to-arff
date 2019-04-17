@@ -9,9 +9,12 @@ public class Utils {
 
     public static List<Movie> movies;
 
+    public static List<String> unused;
+
     static {
         words = new HashSet<>();
         movies = new ArrayList<>();
+        unused = new ArrayList<>();
     }
 
     public static String path;
@@ -101,6 +104,7 @@ public class Utils {
                 if (rating.equals("")) {
                     System.out.println("Filme " + title + "não foi encontrado em " + ratingFile.getPath());
                     System.out.println("Por isso não será inserido no arff");
+                    unused.add(title);
                 } else {
                     Movie movie = new Movie(title, rating);
                     Iterator it = br.lines().iterator();
@@ -275,6 +279,18 @@ public class Utils {
                     }
                 }
                 writer.append(movie.getRating() + "\n");
+            }
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void writeUnusedInFile() {
+        try {
+            FileWriter writer = new FileWriter(path + "/unused.un");
+            for (String string : unused) {
+                writer.append(string + "\n");
             }
             writer.close();
         } catch (IOException e) {

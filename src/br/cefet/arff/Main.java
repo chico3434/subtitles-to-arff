@@ -18,7 +18,7 @@ public class Main {
         if (Utils.path == null) {
             Utils.getPath();
         } else {
-            Utils.ratingFilePath += "/rating.csv";
+            Utils.ratingFilePath += "/Fonte.csv";
             File test = new File(Utils.ratingFilePath);
             if (!test.exists()) {
                 System.out.println("Entre com o caminho do arquivo de classificações: ");
@@ -28,10 +28,13 @@ public class Main {
         }
 
         System.out.println("Caminho: " + Utils.path);
-        System.out.println("Lendo legendas");
+        System.out.println("Lendo legendas...");
         Utils.readSubtitles();
-        System.out.println("Gerando ARFF");
+        System.out.println("Gerando ARFF...");
         Utils.generateArff();
         System.out.println("ARFF gerado");
+        System.out.println("Gerando lista de filmes não usados...");
+        Utils.writeUnusedInFile();
+        System.out.println("Lista gerada");
     }
 }
