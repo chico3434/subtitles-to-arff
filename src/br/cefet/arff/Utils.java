@@ -21,27 +21,16 @@ public class Utils {
 
     public static String ratingFilePath;
 
+    public static String outPath;
+
     public static void getPath() {
         System.out.println("Digite o caminho da pasta em que estão as legendas: ");
         Scanner sc = new Scanner(System.in);
         path = sc.nextLine();
-        ratingFilePath = path + "/rating.csv";
-        File test = new File(ratingFilePath);
-        if (!test.exists()) {
-            System.out.println("Entre com o caminho do arquivo de classificações: ");
-            ratingFilePath = sc.nextLine();
-        }
-    }
-
-    public static void oneArg(String path) {
-        Utils.path = path;
-        ratingFilePath = Utils.path + "/rating.csv";
-        File test = new File(ratingFilePath);
-        if (!test.exists()) {
-            System.out.println("Entre com o caminho do arquivo de classificações: ");
-            Scanner sc = new Scanner(System.in);
-            ratingFilePath = sc.nextLine();
-        }
+        System.out.println("Entre com o caminho do arquivo de classificações: ");
+        ratingFilePath = sc.nextLine();
+        System.out.println("Digite o diretório onde serão criados os arquivos de saída: ");
+        outPath = sc.nextLine();
     }
 
     public static String tranformRating(String rating) {
@@ -112,12 +101,10 @@ public class Utils {
                         String line = (String) it.next();
                         String[] words = line.split(" ");
                         for (String word : words){
+                            word = replaceWord(word);
                             if (cleanWord(word)) {
-                                word = replaceWord(word);
-                                if(!word.equals("")) {
-                                    Utils.words.add(word);
-                                    movie.addWord(word);
-                                }
+                                Utils.words.add(word);
+                                movie.addWord(word);
                             }
                         }
                     }
@@ -132,10 +119,11 @@ public class Utils {
     }
 
     public static String replaceWord(String word) {
+        word = word.replace(" ", "");
         word = word.replace("\'", "");
+        word = word.replace("\"", "");
         word = word.replace(",", "");
         word = word.replace("-", "");
-        word = word.replace("\"", "");
         word = word.replace("}", "");
         word = word.replace("{", "");
         word = word.replace("[", "");
@@ -144,123 +132,56 @@ public class Utils {
         word = word.replace("?", "");
         word = word.replace("´", "");
         word = word.replace("`", "");
+        word = word.replace(">", "");
+        word = word.replace("<", "");
+        word = word.replace(".", "");
+        word = word.replace("~", "");
+        word = word.replace("¡", "");
+        word = word.replace("¿", "");
+        word = word.replace(":", "");
+        word = word.replace("#", "");
+        word = word.replace("$", "");
+        word = word.replace("%", "");
+        word = word.replace("&", "");
+        word = word.replace("(", "");
+        word = word.replace(")", "");
+        word = word.replace("*", "");
+        word = word.replace("+", "");
+        word = word.replace("/", "");
+        word = word.replace(";", "");
+        word = word.replace("=", "");
+        word = word.replace("|", "");
+        word = word.replace("\\", "");
+
+
+        // numbers
+        word = word.replace("0", "");
+        word = word.replace("1", "");
+        word = word.replace("2", "");
+        word = word.replace("3", "");
+        word = word.replace("4", "");
+        word = word.replace("5", "");
+        word = word.replace("6", "");
+        word = word.replace("7", "");
+        word = word.replace("8", "");
+        word = word.replace("9", "");
         return word;
     }
 
-    // Passar tudo para replaceWord depois
+    //  Após passar por replace é verificado se possui algo na palavra
     public static boolean cleanWord(String word) {
-        if (word.equals(".")) {
-            return false;
-        }
-        if (word.equals(",")) {
-            return false;
-        }
-        if (word.equals("!")) {
-            return false;
-        }
-        if (word.equals("?")) {
-            return false;
-        }
-        if (word.equals("-")) {
-            return false;
-        }
-        if (word.equals("--")) {
-            return false;
-        }
-        if (word.equals("\"")) {
-            return false;
-        }
-        if (word.equals("\'")) {
-            return false;
-        }
-        if (word.equals("...")) {
-            return false;
-        }
-        if (word.equals(":")) {
-            return false;
-        }
         if (word.equals(" ")) {
             return false;
         }
         if (word.equals("")) {
             return false;
         }
-        if (word.equals("#")) {
-            return false;
-        }
-        if (word.equals("$")) {
-            return false;
-        }
-        if (word.equals("%")) {
-            return false;
-        }
-        if (word.equals("&")) {
-            return false;
-        }
-        if (word.equals("(")) {
-            return false;
-        }
-        if (word.equals(")")) {
-            return false;
-        }
-        if (word.equals("*")) {
-            return false;
-        }
-        if (word.equals("+")) {
-            return false;
-        }
-        if (word.equals("/")) {
-            return false;
-        }
-        if (word.equals(";")) {
-            return false;
-        }
-        if (word.equals("=")) {
-            return false;
-        }
-        if (word.equals(">")) {
-            return false;
-        }
-        if (word.equals("[")) {
-            return false;
-        }
-        if (word.equals("]")) {
-            return false;
-        }
-        if (word.equals("{")) {
-            return false;
-        }
-        if (word.equals("}")) {
-            return false;
-        }
-        if (word.equals("|")) {
-            return false;
-        }
-        if (word.equals("~")) {
-            return false;
-        }
-        if (word.equals("¡")) {
-            return false;
-        }
-        if (word.equals("´")) {
-            return false;
-        }
-        if (word.equals("¿")) {
-            return false;
-        }
-        if (word.equals("..")) {
-            return false;
-        }
-        if (word.equals("!!")) {
-            return false;
-        }
-
         return true;
     }
 
     public static void generateArff() {
         try {
-            FileWriter writer = new FileWriter(path + "/movie.arff");
+            FileWriter writer = new FileWriter(outPath + "/movie.arff");
             writer.append("@RELATION Movie\n\n");
             Iterator<String> it = words.iterator();
             while(it.hasNext()) {
@@ -288,7 +209,7 @@ public class Utils {
 
     public static void writeUnusedInFile() {
         try {
-            FileWriter writer = new FileWriter(path + "/unused.un");
+            FileWriter writer = new FileWriter(outPath + "/unused.un");
             for (String string : unused) {
                 writer.append(string + "\n");
             }

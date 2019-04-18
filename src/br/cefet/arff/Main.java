@@ -13,17 +13,23 @@ public class Main {
             if (args[i].contains("--ratingFilePath=")) {
                 Utils.ratingFilePath = args[i].replace("--ratingFilePath=", "");
             }
+            if (args[i].contains("--out=")) {
+                Utils.outPath = args[i].replace("--out=", "");
+            }
         }
 
         if (Utils.path == null) {
             Utils.getPath();
         } else {
-            Utils.ratingFilePath += "/Fonte.csv";
-            File test = new File(Utils.ratingFilePath);
-            if (!test.exists()) {
+            if (Utils.ratingFilePath == null) {
                 System.out.println("Entre com o caminho do arquivo de classificações: ");
                 Scanner sc = new Scanner(System.in);
                 Utils.ratingFilePath = sc.next();
+            }
+            if (Utils.outPath == null) {
+                System.out.println("Digite o diretório onde serão criados os arquivos de saída: ");
+                Scanner sc = new Scanner(System.in);
+                Utils.outPath = sc.nextLine();
             }
         }
 
