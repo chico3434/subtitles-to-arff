@@ -1,6 +1,8 @@
 package br.cefet.arff;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 public class Utils {
@@ -10,6 +12,8 @@ public class Utils {
     public static List<Movie> movies;
 
     public static List<String> unused;
+
+    public static String[] ratings = {"Livre", "Dez", "Doze", "Quatorze", "Dezesseis", "Dezoito"};
 
     static {
         words = new HashSet<>();
@@ -35,22 +39,22 @@ public class Utils {
 
     public static String tranformRating(String rating) {
         if (rating.equals("0") || rating.equals("00")) {
-            rating = "Livre";
+            rating = ratings[0];
         }
         if (rating.equals("10")) {
-            rating = "Dez";
+            rating = ratings[1];
         }
         if (rating.equals("12")) {
-            rating = "Doze";
+            rating = ratings[2];
         }
         if (rating.equals("14")) {
-            rating = "Quatorze";
+            rating = ratings[3];
         }
         if (rating.equals("16")) {
-            rating = "Dezesseis";
+            rating = ratings[4];
         }
         if (rating.equals("18")) {
-            rating = "Dezoito";
+            rating = ratings[5];
         }
         return rating;
     }
@@ -74,10 +78,10 @@ public class Utils {
 
         File[] files = dir.listFiles(filter);
 
-        for(File f : files){
+        for(File file : files){
             try {
-                BufferedReader br = new BufferedReader(new FileReader(f));
-                String title = f.getName().replace(".txt","");
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String title = file.getName().replace(".txt","");
                 System.out.println("Lendo " + title);
                 // Pegar classificação indicativa
                 String rating = "";
@@ -95,7 +99,7 @@ public class Utils {
                     System.out.println("Por isso não será inserido no arff");
                     unused.add(title);
                 } else {
-                    Movie movie = new Movie(title, rating);
+                    Movie movie = new Movie(title, rating, file);
                     Iterator it = br.lines().iterator();
                     while (it.hasNext()){
                         String line = (String) it.next();
@@ -209,7 +213,7 @@ public class Utils {
 
     public static void writeUnusedInFile() {
         try {
-            FileWriter writer = new FileWriter(outPath + "/unused.un");
+            FileWriter writer = new FileWriter(outPath + "/unused.txt");
             for (String string : unused) {
                 writer.append(string + "\n");
             }
@@ -218,5 +222,22 @@ public class Utils {
             e.printStackTrace();
         }
     }
+
+    public static void copyUsedSubtitles() {
+        try {
+            for(String rating : ratings) {
+                File dir = new File(outPath + "/" + rating);
+                dir.mkdir();
+                for(Movie movie : movies) {
+                    if (movie.getRating().equals(rating)) {
+                        Files.copy(movie.getFile().toPath(), new File(dir.getPath().concat("/" + movie.getFile().getName())).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 

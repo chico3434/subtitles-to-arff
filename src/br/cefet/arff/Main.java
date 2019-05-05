@@ -1,6 +1,5 @@
 package br.cefet.arff;
 
-import java.io.File;
 import java.util.Scanner;
 
 public class Main {
@@ -42,5 +41,8 @@ public class Main {
         System.out.println("Gerando lista de filmes não usados...");
         Utils.writeUnusedInFile();
         System.out.println("Lista gerada");
+        System.out.println("Copiando legendas...");
+        Utils.copyUsedSubtitles();
+        System.out.println("Legendas copiadas");
     }
 }
